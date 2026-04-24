@@ -91,8 +91,6 @@ open index.html
 
 <br/>
 
-## 📸 Preview
-
 ### Desktop
 | Seção | Descrição |
 |---|---|
