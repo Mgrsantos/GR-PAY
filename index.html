@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GRPay — Seu banco digital</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- ===================== MODAL CADASTRO ===================== -->
+  <div class="modal-overlay" id="modalCadastro">
+    <div class="modal">
+      <button class="modal__close" id="closeCadastro">✕</button>
+      <div class="modal__header">
+        <div class="modal__logo">GR<span>Pay</span></div>
+        <h2>Crie sua conta</h2>
+        <p>Grátis, rápido e sem burocracia</p>
+      </div>
+      <div class="modal__body">
+        <div class="input-group">
+          <label>Nome completo</label>
+          <input type="text" placeholder="Seu nome completo" />
+        </div>
+        <div class="input-group">
+          <label>CPF</label>
+          <input type="text" placeholder="000.000.000-00" maxlength="14" id="cpfInput"/>
+        </div>
+        <div class="input-group">
+          <label>E-mail</label>
+          <input type="email" placeholder="seu@email.com" />
+        </div>
+        <div class="input-group">
+          <label>Celular</label>
+          <input type="text" placeholder="(00) 00000-0000" maxlength="15" id="phoneInput"/>
+        </div>
+        <div class="input-group">
+          <label>Senha</label>
+          <div class="input-password">
+            <input type="password" placeholder="Mínimo 8 caracteres" id="senhaInput"/>
+            <button class="toggle-password" onclick="togglePassword('senhaInput', this)">👁</button>
+          </div>
+        </div>
+        <div class="input-check">
+          <input type="checkbox" id="termos"/>
+          <label for="termos">Li e aceito os <a href="#" onclick="return false;">Termos de Uso</a> e a <a href="#" onclick="return false;">Política de Privacidade</a></label>
+        </div>
+        <button class="btn btn--primary btn--full" onclick="handleCadastro()">Criar conta gratuita →</button>
+        <p class="modal__switch">Já tem conta? <a href="#" onclick="switchModal('modalCadastro','modalLogin'); return false;">Entrar</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL LOGIN ===================== -->
+  <div class="modal-overlay" id="modalLogin">
+    <div class="modal">
+      <button class="modal__close" id="closeLogin">✕</button>
+      <div class="modal__header">
+        <div class="modal__logo">Nova<span>Pay</span></div>
+        <h2>Bem-vindo de volta</h2>
+        <p>Entre na sua conta NovaPay</p>
+      </div>
+      <div class="modal__body">
+        <div class="input-group">
+          <label>E-mail ou CPF</label>
+          <input type="text" placeholder="seu@email.com ou CPF" />
+        </div>
+        <div class="input-group">
+          <label>Senha</label>
+          <div class="input-password">
+            <input type="password" placeholder="Sua senha" id="senhaLoginInput"/>
+            <button class="toggle-password" onclick="togglePassword('senhaLoginInput', this)">👁</button>
+          </div>
+        </div>
+        <div class="modal__forgot">
+          <a href="#" onclick="return false;">Esqueci minha senha</a>
+        </div>
+        <button class="btn btn--primary btn--full" onclick="handleLogin()">Entrar na conta →</button>
+        <p class="modal__switch">Não tem conta? <a href="#" onclick="switchModal('modalLogin','modalCadastro'); return false;">Criar conta grátis</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL SUCESSO ===================== -->
+  <div class="modal-overlay" id="modalSucesso">
+    <div class="modal modal--success">
+      <div class="success-icon">✓</div>
+      <h2>Tudo certo!</h2>
+      <p id="sucessoMensagem">Sua conta foi criada com sucesso!</p>
+      <button class="btn btn--primary btn--full" onclick="closeModal('modalSucesso')">Fechar</button>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav__logo">Nova<span>Pay</span></div>
+    <ul class="nav__links">
+      <li><a href="#features" class="nav-scroll">Produto</a></li>
+      <li><a href="#stats" class="nav-scroll">Tarifas</a></li>
+      <li><a href="#features" class="nav-scroll">Empresas</a></li>
+      <li><a href="#testimonials" class="nav-scroll">Blog</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="#" class="btn btn--ghost" onclick="openModal('modalLogin'); return false;">Entrar</a>
+      <a href="#" class="btn btn--primary" onclick="openModal('modalCadastro'); return false;">Abrir conta grátis</a>
+    </div>
+    <button class="nav__hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu actions -->
+  <div class="nav__mobile-actions" id="mobileActions">
+    <a href="#" class="btn btn--ghost" onclick="openModal('modalLogin'); return false;">Entrar</a>
+    <a href="#" class="btn btn--primary" onclick="openModal('modalCadastro'); return false;">Abrir conta grátis</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__bg-blob blob1"></div>
+    <div class="hero__bg-blob blob2"></div>
+    <div class="hero__content">
+      <div class="hero__badge">✦ Mais de 2 milhões de clientes</div>
+      <h1 class="hero__title">
+        Dinheiro que<br/>
+        <em>trabalha por você</em>
+      </h1>
+      <p class="hero__subtitle">
+        Conta digital com rendimento automático, cartão sem anuidade e transferências ilimitadas. Tudo no seu celular.
+      </p>
+      <div class="hero__cta">
+        <a href="#" class="btn btn--primary btn--lg" onclick="openModal('modalCadastro'); return false;">Criar conta gratuita</a>
+        <a href="#features" class="btn btn--outline btn--lg nav-scroll">Ver como funciona ↓</a>
+      </div>
+      <div class="hero__trust">
+        <div class="trust-item">
+          <span class="trust-icon">🔒</span>
+          <span>Regulado pelo Banco Central</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">⚡</span>
+          <span>Conta aberta em 5 min</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">💸</span>
+          <span>Sem tarifas ocultas</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="phone-mockup">
+        <div class="phone-mockup__inner">
+          <div class="phone-screen">
+            <div class="phone-header">
+              <span class="phone-greeting">Bom dia, Ana 👋</span>
+              <div class="phone-avatar">A</div>
+            </div>
+            <div class="phone-balance-card">
+              <span class="balance-label">Saldo disponível</span>
+              <span class="balance-amount">R$ 4.823,<small>17</small></span>
+              <span class="balance-yield">+R$ 12,40 rendendo hoje ✦</span>
+            </div>
+            <div class="phone-actions">
+              <div class="phone-action">
+                <div class="action-icon">↑</div>
+                <span>Transferir</span>
+              </div>
+              <div class="phone-action">
+                <div class="action-icon">↓</div>
+                <span>Receber</span>
+              </div>
+              <div class="phone-action">
+                <div class="action-icon">#</div>
+                <span>Pix</span>
+              </div>
+              <div class="phone-action">
+                <div class="action-icon">⊞</div>
+                <span>Pagar</span>
+              </div>
+            </div>
+            <div class="phone-transactions">
+              <div class="tx">
+                <div class="tx-left">
+                  <div class="tx-ico tx-ico--green">↓</div>
+                  <div>
+                    <div class="tx-name">Salário</div>
+                    <div class="tx-date">Hoje</div>
+                  </div>
+                </div>
+                <div class="tx-val tx-val--green">+R$ 5.200</div>
+              </div>
+              <div class="tx">
+                <div class="tx-left">
+                  <div class="tx-ico">↑</div>
+                  <div>
+                    <div class="tx-name">Netflix</div>
+                    <div class="tx-date">Ontem</div>
+                  </div>
+                </div>
+                <div class="tx-val">-R$ 44,90</div>
+              </div>
+              <div class="tx">
+                <div class="tx-left">
+                  <div class="tx-ico tx-ico--green">↓</div>
+                  <div>
+                    <div class="tx-name">Pedro Lima</div>
+                    <div class="tx-date">Ter, 22 Abr</div>
+                  </div>
+                </div>
+                <div class="tx-val tx-val--green">+R$ 120</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="floating-card card1">
+        <span>🎉</span> Sua conta rendeu <strong>R$ 48,20</strong> esse mês
+      </div>
+      <div class="floating-card card2">
+        <span>⚡</span> Pix enviado com sucesso!
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-label">O que oferecemos</div>
+      <h2 class="section-title">Tudo que você precisa,<br/>em um só app</h2>
+      <div class="features__grid">
+        <div class="feature-card feature-card--highlight">
+          <div class="feature-card__icon">💰</div>
+          <h3>Rendimento automático</h3>
+          <p>Seu saldo rende 105% do CDI automaticamente, todo dia, sem você precisar fazer nada.</p>
+          <div class="feature-card__tag">Mais popular</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">💳</div>
+          <h3>Cartão sem anuidade</h3>
+          <p>Cartão de débito e crédito internacional sem cobrança de anuidade. Para sempre.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">⚡</div>
+          <h3>Pix 24/7</h3>
+          <p>Transferências instantâneas a qualquer hora, inclusive fins de semana e feriados.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🔒</div>
+          <h3>Segurança máxima</h3>
+          <p>Biometria, autenticação em dois fatores e monitoramento em tempo real de cada transação.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">📊</div>
+          <h3>Controle total</h3>
+          <p>Relatórios detalhados dos seus gastos com categorização automática e metas personalizadas.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🌎</div>
+          <h3>Sem fronteiras</h3>
+          <p>Use seu cartão no exterior sem taxas abusivas. Câmbio transparente, sempre.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats" id="stats">
+    <div class="container">
+      <div class="stats__grid">
+        <div class="stat-item">
+          <div class="stat-number">2M<span>+</span></div>
+          <div class="stat-label">Clientes ativos</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">105<span>%</span></div>
+          <div class="stat-label">do CDI de rendimento</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">R$0</div>
+          <div class="stat-label">de anuidade</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">4.9<span>★</span></div>
+          <div class="stat-label">Nota na App Store</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-label">Depoimentos</div>
+      <h2 class="section-title">Quem usa, recomenda</h2>
+      <div class="testimonials__grid">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Abri minha conta em menos de 5 minutos. Nunca mais precisei ir ao banco. O rendimento automático já me deu um dinheiro extra sem fazer nada."</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#21c55d">M</div>
+            <div>
+              <strong>Marina Costa</strong>
+              <span>Desenvolvedora, SP</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card testi-card--featured">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Finalmente um banco que me trata como adulto. Interface clara, sem letras miúdas, sem taxas escondidas. Melhor decisão financeira que tomei."</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#16a34a">R</div>
+            <div>
+              <strong>Rafael Mendes</strong>
+              <span>Designer, RJ</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Usei no exterior e funcionou perfeitamente. Taxa de câmbio honesta, sem surpresas na fatura. Compra tranquila em 12 países diferentes."</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#15803d">J</div>
+            <div>
+              <strong>Juliana Torres</strong>
+              <span>Empreendedora, MG</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <div class="cta-final__blob"></div>
+    <div class="container">
+      <div class="cta-final__inner">
+        <div class="section-label" style="color: rgba(255,255,255,0.7)">Pronto para começar?</div>
+        <h2>Sua conta em menos<br/>de <em>5 minutos</em></h2>
+        <p>Sem burocracia. Sem agências. Sem filas.</p>
+        <a href="#" class="btn btn--white btn--lg" onclick="openModal('modalCadastro'); return false;">Abrir conta gratuita →</a>
+        <div class="cta-final__stores">
+          <a href="https://apps.apple.com" target="_blank" rel="noopener" class="store-btn">
+            <span class="store-icon">🍎</span>
+            <div><small>Disponível na</small><strong>App Store</strong></div>
+          </a>
+          <a href="https://play.google.com" target="_blank" rel="noopener" class="store-btn">
+            <span class="store-icon">▶</span>
+            <div><small>Disponível no</small><strong>Google Play</strong></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <div class="nav__logo">Nova<span>Pay</span></div>
+          <p>Banco digital seguro, moderno e feito para você crescer.</p>
+        </div>
+        <div class="footer__links">
+          <div class="footer__col">
+            <h4>Produto</h4>
+            <a href="#features" class="nav-scroll">Conta digital</a>
+            <a href="#features" class="nav-scroll">Cartão</a>
+            <a href="#stats" class="nav-scroll">Rendimento</a>
+            <a href="#features" class="nav-scroll">Pix</a>
+          </div>
+          <div class="footer__col">
+            <h4>Empresa</h4>
+            <a href="#testimonials" class="nav-scroll">Sobre nós</a>
+            <a href="#testimonials" class="nav-scroll">Blog</a>
+            <a href="#" onclick="return false;">Carreiras</a>
+            <a href="#" onclick="return false;">Imprensa</a>
+          </div>
+          <div class="footer__col">
+            <h4>Suporte</h4>
+            <a href="#" onclick="return false;">Central de ajuda</a>
+            <a href="#" onclick="return false;">Contato</a>
+            <a href="#" onclick="return false;">Termos de uso</a>
+            <a href="#" onclick="return false;">Privacidade</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2025 NovaPay Instituição de Pagamento S.A. — CNPJ 00.000.000/0001-00</span>
+        <span>Autorizado pelo Banco Central do Brasil</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ========== SCROLL SUAVE ========== */
+    document.querySelectorAll('.nav-scroll').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            const top = target.getBoundingClientRect().top + window.scrollY - 80;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+          navLinks.classList.remove('open');
+          mobileActions.classList.remove('open');
+        }
+      });
+    });
+
+    /* ========== HAMBURGER ========== */
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.querySelector('.nav__links');
+    const mobileActions = document.getElementById('mobileActions');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      mobileActions.classList.toggle('open');
+    });
+
+    /* ========== MODAIS ========== */
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+    function switchModal(from, to) {
+      closeModal(from);
+      setTimeout(() => openModal(to), 200);
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) closeModal(this.id);
+      });
+    });
+
+    document.getElementById('closeCadastro').addEventListener('click', () => closeModal('modalCadastro'));
+    document.getElementById('closeLogin').addEventListener('click', () => closeModal('modalLogin'));
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') ['modalCadastro','modalLogin','modalSucesso'].forEach(closeModal);
+    });
+
+    /* ========== TOGGLE SENHA ========== */
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+      else { input.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    /* ========== MÁSCARAS ========== */
+    document.getElementById('cpfInput').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g,'').substring(0,11);
+      v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+      this.value = v;
+    });
+    document.getElementById('phoneInput').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g,'').substring(0,11);
+      v = v.replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d{1,4})$/,'$1-$2');
+      this.value = v;
+    });
+
+    /* ========== SUBMIT ========== */
+    function handleCadastro() {
+      if (!document.getElementById('termos').checked) {
+        alert('Por favor, aceite os Termos de Uso para continuar.');
+        return;
+      }
+      closeModal('modalCadastro');
+      setTimeout(() => {
+        document.getElementById('sucessoMensagem').textContent =
+          'Sua conta foi criada com sucesso! Em breve você receberá um e-mail de confirmação. 🎉';
+        openModal('modalSucesso');
+      }, 200);
+    }
+    function handleLogin() {
+      closeModal('modalLogin');
+      setTimeout(() => {
+        document.getElementById('sucessoMensagem').textContent =
+          'Login realizado com sucesso! Bem-vindo de volta à NovaPay. 🎉';
+        openModal('modalSucesso');
+      }, 200);
+    }
+
+    /* ========== SCROLL REVEAL ========== */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(el => { if (el.isIntersecting) el.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.feature-card, .stat-item, .testi-card').forEach(el => {
+      el.classList.add('reveal');
+      observer.observe(el);
+    });
+
+    /* ========== NAVBAR SCROLL ========== */
+    window.addEventListener('scroll', () => {
+      document.querySelector('.nav').classList.toggle('scrolled', window.scrollY > 40);
+    });
+  </script>
+</body>
+</html>
